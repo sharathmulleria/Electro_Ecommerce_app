@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product Offer</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <style>
+        .container {
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group input {
+            max-width: 200px;
+        }
+
+        .btn {
+            margin-bottom: 10px;
+        }
+    </style>
+
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Add Product Offer</h2>
+
+    <!--  Form Starts here  -->
+    <form th:action="@{/admin/offerAdd}" th:object="${productOffer}" method="post">
+        <div class="form-group">
+            <label for="productName">Product Name:</label>
+            <select class="form-control" id="productName" th:field="*{product}" required>
+                <option th:each="product : ${products}" th:value="${product.id}"
+                        th:text="${product.productName}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="discountDescription">Discount Name:</label>
+            <input type="text" class="form-control" id="discountDescription" th:field="*{description}" required>
+        </div>
+        <div class="form-group">
+            <label for="discountPercentage">Discount Percentage:</label>
+            <input type="number" class="form-control" id="discountPercentage" th:field="*{discountPercentage}" required>
+        </div>
+        <div class="form-group">
+            <label for="offerStartDate">Offer Start Date:</label>
+            <input type="date" class="form-control" id="offerStartDate" th:field="*{createDate}" required>
+        </div>
+        <div class="form-group">
+            <label for="offerEndDate">Offer End Date:</label>
+            <input type="date" class="form-control" id="offerEndDate" th:field="*{expirationDate}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Offer</button>
+    </form>
+    <!--  Form Starts here  -->
+
+</div>
+</body>
+</html>

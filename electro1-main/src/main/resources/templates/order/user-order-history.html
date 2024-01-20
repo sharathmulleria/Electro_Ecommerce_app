@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .order-container {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .order-card {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .product-img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="text-center">Order History</h1>
+    <div class="order-container" th:each="order : ${orders}">
+        <div class="order-card">
+            <h4>Order ID: <span th:text="${order.id}"></span></h4>
+            <h4>Order Date: <span th:text="${order.ordered_date}"></span></h4>
+            <div class="row">
+                <div class="col-md-3">
+                    <img th:src="${order.product.imageName}" alt="Product Image" class="product-img">
+                </div>
+                <div class="col-md-9">
+                    <h5>Product Name: <span th:text="${order.product.productName}"></span></h5>
+                    <h5>Product Price: <span th:text="${order.product.price}"></span></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

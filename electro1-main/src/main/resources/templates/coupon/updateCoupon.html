@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Update Coupon</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<style>
+    .btn-back:hover {
+    background-color: #e2e6ea;
+    color: #3a3b3c;
+    text-decoration: none;
+}
+</style>
+</head>
+<body>
+<div class="container mt-5" >
+    <h2>Update Coupon</h2>
+    <form th:action="@{/admin/updateCoupon}" th:object="${coupon}" th:method="post">
+        <input type="hidden" th:field="*{couponId}">
+        <div class="form-group">
+            <label for="code">Code:</label>
+            <input type="text" class="form-control" id="code" th:field="*{code}">
+        </div>
+        <div class="form-group">
+            <label for="discount">Discount:</label>
+            <input type="text" class="form-control" id="discount" th:field="*{discountPercentage}">
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea class="form-control" id="description" th:field="*{description}"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="expirationDate">Expiration Date:</label>
+            <input type="datetime-local" class="form-control" id="expirationDate" th:field="*{expirationDate}">
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+</div>
+
+<div class="container mt-5">
+    <a href="/admin/listCoupon" class="btn btn-back">Back to Coupon</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#editAddressModal"
+        th:attr="data-user-address-id=${address.userAddressID}">
+    Edit
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="editAddressModal" tabindex="-1" role="dialog" aria-labelledby="editAddressModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/user/edit-address}" method="post">
+                    <input type="hidden" name="userAddressID" th:value="${userAddressID}"/>
+                    <!-- Add the necessary form fields here -->
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

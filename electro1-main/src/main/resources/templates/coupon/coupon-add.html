@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Coupon</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        .container {
+            padding-top: 20px;
+        }
+         .btn-back:hover {
+            background-color: #e2e6ea;
+            color: #3a3b3c;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Add Coupon</h2>
+    <form action="#" th:action="@{/admin/add-coupon}" th:object="${coupon}" method="post">
+        <div class="form-group">
+            <label for="code">Code:</label>
+            <input type="text" class="form-control" id="code" placeholder="Enter Code" name="code" th:field="*{code}">
+        </div>
+        <div class="form-group">
+            <label for="discount">Discount:</label>
+            <input type="text" class="form-control" id="discount" placeholder="Enter Discount" name="discount" th:field="*{discountPercentage}">
+        </div>
+        <div class="form-group">
+            <label for="discount">Discription:</label>
+            <input type="text" class="form-control" id="description" placeholder="Enter Discription" name="description" th:field="*{description}">
+        </div>
+        <div class="form-group">
+            <label for="type">Type:</label>
+            <select class="form-control" id="type" name="type" >
+                <option value="percentage">Percentage</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="expirationDate">Expiration Date</label>
+            <input type="datetime-local" class="form-control" id="expirationDate" th:field="*{expirationDate}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add</button>
+    </form>
+</div>
+<div class="container mt-5">
+    <a href="/admin/listCoupon" class="btn btn-back">Back to Coupon</a>
+</div>
+</body>
+</html>

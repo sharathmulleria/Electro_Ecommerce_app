@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script type="text/javascript">
+        function confirmCancel() {
+            if (confirm("Are you sure you want to cancel this order?")) {
+                // If the user confirms, the link will be followed
+                return true;
+            } else {
+                // If the user cancels, the link won't be followed
+                return false;
+            }
+        }
+    </script>
+    <meta charset="UTF-8">
+    <title>Order History</title>
+    <link rel="stylesheet" href="/css/styles.css"> <!-- Add your CSS file link here -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+
+        .gradient-custom {
+/* fallback for old browsers */
+background: #cd9cf2;
+
+/* Chrome 10-25, Safari 5.1-6 */
+background: -webkit-linear-gradient(to top left, rgba(205, 156, 242, 1), rgba(246, 243, 255, 1));
+
+/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+background: linear-gradient(to top left, rgba(205, 156, 242, 1), rgba(246, 243, 255, 1))
+}
+        .cancel-button {
+    text-decoration: none;
+    color: #cd9cf2; /* Set your desired background color */
+    color: white; /* Text color */
+    padding: 5px 5px; /* Adjust padding as needed */
+    border: none;
+    border-radius: 3px; /* Rounded corners */
+    cursor: pointer;
+
+    /* margin-left: 32px; */
+    position: relative;
+    left: 225px;
+    transition: background-color 0.3s ease; /* Smooth hover transition */
+}
+
+.cancel-button:hover {
+    background-color: #ebbceb; /* Change color on hover */
+}
+                .cancel-button1 {
+    text-decoration: none;
+    color: #cd9cf2; /* Set your desired background color */
+    color: white; /* Text color */
+    padding: 5px 5px; /* Adjust padding as needed */
+    border: none;
+    border-radius: 3px; /* Rounded corners */
+    cursor: pointer;
+
+
+    position: relative;
+    left: 117px;
+    transition: background-color 0.3s ease; /* Smooth hover transition */
+}
+
+.cancel-button1:hover {
+    background-color: #ebbceb; /* Change color on hover */
+}
+                        .cancel-button2 {
+    text-decoration: none;
+    color: #cd9cf2; /* Set your desired background color */
+    color: white; /* Text color */
+    padding: 5px 10px; /* Adjust padding as needed */
+    border: none;
+    border-radius: 3px; /* Rounded corners */
+    cursor: pointer;
+      position: relative;
+    left: 117px;
+    transition: background-color 0.3s ease; /* Smooth hover transition */
+}
+
+.cancel-button2:hover {
+    background-color: #ebbceb; /* Change color on hover */
+}
+    </style>
+</head>
+<body>
+
+
+<section class="h-100 gradient-custom">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100" th:each="order : ${orderList}">
+            <div class="col-lg-10 col-xl-10">
+                <div class="card" style="border-radius: 10px;">
+                    <div class="card-header px-5 py-4">
+                        <h5 class="text-muted mb-0">Thanks for your Order, <span style="color: #a8729a;"  th:sec:authentication="principal.username">Anna</span>!</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <p class="small text-muted mb-0" th:text="${order.ordered_date}">Receipt Voucher : 1KAU9-84UIL</p>
+                            <a th:href="@{/user/cancelOrder/{id}(id=${order.id})}"  class="cancel-button">  <button onclick="confirmCancel()">Cancel order</button>
+                            </a>
+                            <a th:href="@{/user/downloadInvoice/{id}(id=${order.id})}"  class="cancel-button">  <button>Download invoice</button>
+                            </a>
+
+                            <p class="small text-muted mb-0" th:text="${'ORDERID:'+order.id}">Receipt Voucher : 1KAU9-84UIL</p>
+                        </div>
+                        <div class="card shadow-0 border mb-4">
+                            <div class="card-body">
+                                <div class="row d-flex align-items-center">
+
+                                    <div class="col-md-10">
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <div>
+                                                <span><p>ORDER STATUS :</p> <p style="color: green" th:text="${order.status}"></p></span>
+                                            </div>
+                                            <div>
+                                                <h5 > <span style="color: #a8729a;"  >YOUR ORDERS</span>!</h5>
+                                            </div>
+                                            <div>
+                                                <!--                                                <a th:href="@{/user/cancelOrder/{id}(id=${order.orderID})}"  class="cancel-button">  <button onclick="confirmCancel()">Cancel order</button>-->
+                                                <!--                                                </a>-->
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
+
+                                <div class="row" th:each="orderItem : ${order.orderItems}">
+                                    <!-- Iterate over order items within each order -->
+
+                                    <div class="col-md-2">
+                                        <img th:src="@{${'/img/'+orderItem.product.imageName}}"
+                                             class="img-fluid" alt="Phone">
+                                    </div>
+                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                        <!-- Access product details from the order item -->
+                                        <p class="text-muted mb-0" th:text="${orderItem.product.productName}">Samsung Galaxy</p>
+                                    </div>
+                                    <!--                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">-->
+                                    <!--                                            &lt;!&ndash; Access other product details as needed &ndash;&gt;-->
+                                    <!--                                            <p class="text-muted mb-0 small" >White</p>-->
+                                    <!--                                        </div>-->
+
+                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                        <p class="text-muted mb-0 small"  th:text="${orderItem.quantity}">Qty: 1</p>
+                                    </div>
+                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                        <!-- Access product price from the order item -->
+                                        <p class="text-muted mb-0 small" th:text="${orderItem.product.price}">$499</p>
+                                    </div>
+                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                        <p class="text-muted mb-0 small"  th:text="${orderItem.product.price * orderItem.quantity}">Capacity: 64GB</p>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                        <div class="d-flex justify-content-between pt-2">
+                            <p class="fw-bold mb-0">Order Details</p>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-5">
+                            <p class="text-muted mb-0"><span class="fw-bold me-4">Delivery Charges:</span> Free</p>
+                        </div>
+                    </div>
+                    <div class="card-footer border-0 px-4 py-5"
+                         style="background-color: #a8729a; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+<!--                        <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">Total-->
+<!--                            Amount: <span class="h2 mb-0 ms-2" th:text="${total}">$1040</span></h5>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

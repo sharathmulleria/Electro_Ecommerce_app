@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupon Management</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:hover {background-color: #f5f5f5;}
+                .btn-back {
+            background-color: #f8f9fa;
+            border: 1px solid #6c757d;
+            color: #6c757d;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .btn-back:hover {
+            background-color: #e2e6ea;
+            color: #3a3b3c;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container pagination" >
+    <h2>Coupon Management</h2>
+    <table>
+        <tr>
+            <th>Coupon ID</th>
+            <th>Coupon Code</th>
+            <th>Coupon Description</th>
+            <th>Expiry Date</th>
+            <th>Update</th>
+        </tr>
+        <tr th:each="coupon : ${coupons}">
+            <td th:text="${coupon.couponId}">Coupon ID</td>
+            <td th:text="${coupon.code}">Coupon Code</td>
+            <td th:text="${coupon.description}">Coupon Description</td>
+            <td th:text="${coupon.expirationDate}">Expiry Date</td>
+            <td><a th:href="@{/admin/updateCouponForm/{id}(id=${coupon.couponId})}" class="btn btn-primary">Update</a></td>
+        </tr>
+        <tr>
+            <td colspan="5" align="right">
+                <a th:href="@{/admin/coupon}" class="btn btn-primary">Add Coupon</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="container mt-5">
+    <a href="/admin/home" class="btn btn-back">Back to Home</a>
+</div>
+</body>
+</html>

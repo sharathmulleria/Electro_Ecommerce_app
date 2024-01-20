@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>Electro - HTML Ecommerce Template</title>
+
+    <!-- Google font -->
+    <link th:href="@{https://fonts.googleapis.com/css?family=Montserrat:400,500,700}" rel="stylesheet"/>
+
+    <!-- Bootstrap -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+
+    <!-- Slick -->
+    <link th:href="@{/css/slick.css}" rel="stylesheet"/>
+    <link th:href="@{/css/slick-theme.css}" rel="stylesheet"/>
+
+    <!-- nouislider -->
+    <link th:href="@{/css/nouislider.min.css}" rel="stylesheet"/>
+
+    <!-- Font Awesome Icon -->
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
+
+    <!-- Custom stylesheet -->
+    <link th:href="@{/css/style.css}" rel="stylesheet"/>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script th:src="@{/js/html5shiv.min.js}"></script>
+    <script th:src="@{/js/respond.min.js}"></script>
+    <![endif]-->
+
+    <style>
+        body {
+            margin-top: 20px;
+            font-family: Arial, Helvetica, sans-serif;
+               background-color: #f5f5f5;
+        }
+
+        .main {
+            padding: 15px;
+        }
+
+
+         .sidebar {
+        background-color: #333;
+        color: white;
+        height: 100%;
+    }
+
+        .sidebar a {
+            margin-left: 10px;
+            display: block;
+            color: black;
+            padding: 10px;
+            font-size: 18px;
+            text-decoration: none;
+              transition: background-color 0.3s;
+        }
+         .sidebar a:hover {
+        background-color: red;
+    }
+
+        .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+             background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+         .rounded-circle {
+        border-radius: 50%;
+    }
+
+        .content {
+            background-color: white;
+        }
+
+        .card.text-center {
+            background-color: #fff;
+            border-radius: 10px;
+  padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .row hr {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            border: 0;
+            border-top: 1px solid #eee;
+        }
+
+        .row h4 {
+            font-size: 18px;
+            margin-left:15px;
+        }
+
+
+
+        .text-secondary {
+            color: #888;
+        }
+        .address-item {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+    </style>
+</head>
+<body>
+<!-- HEADER -->
+<header>
+    <!-- TOP HEADER -->
+
+
+    <!-- MAIN HEADER -->
+    <div id="header">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <!-- LOGO -->
+                <div class="col-md-3">
+                    <div class="header-logo">
+                        <a href="#" class="logo">
+                            <img th:src="@{/img/logo.png}" alt="">
+                        </a>
+                    </div>
+                </div>
+                <!-- /LOGO -->
+
+                <!-- SEARCH BAR -->
+
+                <!-- ACCOUNT -->
+                <div class="col-md-3 clearfix">
+                    <div class="header-ctn">
+
+                        <div class="menu-toggle">
+                            <a href="#">
+                                <i class="fa fa-bars"></i>
+                                <span>Menu</span>
+                            </a>
+                        </div>
+                        <!-- /Menu Toogle -->
+                    </div>
+                </div>
+                <!-- /ACCOUNT -->
+            </div>
+            <!-- row -->
+        </div>
+        <!-- container -->
+    </div>
+    <!-- /MAIN HEADER -->
+</header>
+<!-- /HEADER -->
+
+<!-- NAVIGATION -->
+<nav id="navigation">
+    <!-- container -->
+    <div class="container">
+        <!-- responsive-nav -->
+
+        <!-- /responsive-nav -->
+    </div>
+    <!-- /container -->
+</nav>
+<!-- /NAVIGATION -->
+
+<!-- BREADCRUMB -->
+<div id="breadcrumb" class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="breadcrumb-header">WELCOME<p sec:authentication="principal.username">user</p></h3>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /BREADCRUMB -->
+
+<!-- SECTION -->
+<!--<li ></li>-->
+<div class="container">
+    <div class="main">
+
+        <div class="row">
+            <div class="col-md-4 mt-1">
+                <div class="card text-center sidebar">
+                    <div class="card-body">
+                        <img th:src="@{/img/user1.png}" alt="user" class="rounded-circle" width="150">
+
+
+                        <div class="mt-3">
+
+                            <hr>
+                            <a th:href="@{/}">HOME</a>
+
+                            <hr>
+                            <a th:href="@{/user/updateProfile/{user_id}(user_id=${user_id})}">EDIT PROFILE</a>
+
+                            <hr>
+                            <a th:href="@{/user/orderHistory/{user_id}(user_id=${user_id})}">ORDERS</a>
+
+                            <hr>
+                            <a th:href="@{/user/addUserAddress}">ADD ADDRESS</a>
+
+
+                            <hr>
+                            <a th:href="@{/user/updatePassword/{user_id}(user_id=${user_id})}">CHANGE PASSWORD</a>
+
+                            <hr>
+                            <a th:href="@{/logout}" sec:authorize="isAuthenticated()">LOGOUT</a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 mt-1">
+                <div class="card mb-3 content">
+                    <h1 class="m-1 pt-1" style="color:black;margin-left:15px;"> Info</h1>
+                    <hr>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h4 style="color:black;"> User name</h4>
+                            </div>
+                            <div class="col-md-9 text-secondary">
+                                <h4 style="color:black;" th:text="${username}">Sharath kumar</h4>
+
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h4 style="color:black;">Email</h4>
+                            </div>
+                            <div class="col-md-9 text-secondary">
+                                <h4 style="color:black;" th:text="${email}">Abc@gmail</h4>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h4 style="color:black;"> Phone</h4>
+                            </div>
+                            <div class="col-md-9 text-secondary">
+                                <h4 style="color:black;" th:text="${phone}">9447856144</h4>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="col-8">
+                            <h4 style="color: black;"> Address</h4>
+
+                            <form th:action="@{/user/set-default-address}" method="post" maxlength="20">
+
+                                <ul class="list-group mb-4">
+                                    <li th:each="address, iterStat : ${addresses}" class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span th:text="${address.streetDetails}"></span>,
+                                            <span th:text="${address.cityName}"></span>,
+                                            <span th:text="${address.state}"></span>
+                                            <span th:text="${address.postalCode}"></span>
+                                        </div>
+
+                                        <div class="form-check">
+                                            <input th:checked="${address.isDefault}" class="form-check-input" type="radio" name="addressId" th:value="${address.userAddressID}">
+                                            <label class="form-check-label">Set as Default</label>
+                                        </div>
+
+                                        <div class="btn-group">
+                                            <a th:href="@{/user/edit-address(userAddressID=${address.userAddressID})}" class="btn btn-primary">Edit</a>
+                                            <a th:href="@{/user/delete-address(userAddressID=${address.userAddressID})}" class="btn btn-danger">Delete</a>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <button type="submit" class="btn btn-primary">Set Default Address</button>
+
+                            </form>
+
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+
+
+<!-- /SECTION -->
+
+
+>
+
+<!-- FOOTER -->
+<footer id="footer">
+    <!-- top footer -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-3 col-xs-6">
+                    <div class="footer">
+                        <h3 class="footer-title">About Us</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt
+                            ut.</p>
+                        <ul class="footer-links">
+                            <li><a href="#"><i class="fa fa-map-marker"></i>1734 Stonecoal Road</a></li>
+                            <li><a href="#"><i class="fa fa-phone"></i>+021-95-51-84</a></li>
+                            <li><a href="#"><i class="fa fa-envelope-o"></i>email@email.com</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-xs-6">
+                    <div class="footer">
+                        <h3 class="footer-title">Categories</h3>
+                        <ul class="footer-links">
+                            <li><a href="#">Hot deals</a></li>
+                            <li><a href="#">Laptops</a></li>
+                            <li><a href="#">Smartphones</a></li>
+                            <li><a href="#">Cameras</a></li>
+                            <li><a href="#">Accessories</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-xs"></div>
+
+                <div class="col-md-3 col-xs-6">
+                    <div class="footer">
+                        <h3 class="footer-title">Information</h3>
+                        <ul class="footer-links">
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Orders and Returns</a></li>
+                            <li><a href="#">Terms & Conditions</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-xs-6">
+                    <div class="footer">
+                        <h3 class="footer-title">Service</h3>
+                        <ul class="footer-links">
+                            <li><a href="#">My Account</a></li>
+                            <li><a href="#">View Cart</a></li>
+                            <li><a href="#">Wishlist</a></li>
+                            <li><a href="#">Track My Order</a></li>
+                            <li><a href="#">Help</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /top footer -->
+
+    <!-- bottom footer -->
+    <div id="bottom-footer" class="section">
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <ul class="footer-payments">
+                        <li><a href="#"><i class="fa fa-cc-visa"></i></a></li>
+                        <li><a href="#"><i class="fa fa-credit-card"></i></a></li>
+                        <li><a href="#"><i class="fa fa-cc-paypal"></i></a></li>
+                        <li><a href="#"><i class="fa fa-cc-mastercard"></i></a></li>
+                        <li><a href="#"><i class="fa fa-cc-discover"></i></a></li>
+                        <li><a href="#"><i class="fa fa-cc-amex"></i></a></li>
+                    </ul>
+                    <span class="copyright">
+								<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+								Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i
+                            class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com"
+                                                                                target="_blank">Colorlib</a>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+							</span>
+
+
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /bottom footer -->
+</footer>
+<!-- /FOOTER -->
+
+<!-- jQuery Plugins -->
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/slick.min.js"></script>
+<script src="js/nouislider.min.js"></script>
+<script src="js/jquery.zoom.min.js"></script>
+<script src="js/main.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+
+
+</body>
+</html>

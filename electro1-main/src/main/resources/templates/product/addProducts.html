@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Products</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <style>
+        /* Add your custom styles here */
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#" th:href="@{/admin/home}">Back to Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Add navigation links if needed -->
+        </div>
+    </div>
+</nav>
+
+<br>
+<br>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+
+            <div th:if="${param.success}" class="alert alert-success">
+                You've successfully registered to our awesome app!
+            </div>
+
+            <h1 class="mb-4">Add Products</h1>
+
+            <form th:action="@{/admin/addProducts}" method="post" th:object="${product}">
+<!--                <input type="hidden" th:field="*{id}" />-->
+                <div class="form-group">
+                    <label for="productName">Product Name</label>
+                    <input id="productName" class="form-control" th:field="*{productName}" required autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input id="price" class="form-control" th:field="*{price}" required type="number">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input id="description" class="form-control" th:field="*{description}" required>
+                </div>
+
+
+                <div class="form-group">
+                    <label >Select Category</label>
+                    <select class="form-control" th:field="*{categoryId}" name="category">
+                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="stock">Stock</label>
+                    <input id="stock" class="form-control" th:field="*{stock}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cost">Cost</label>
+                    <input id="cost" class="form-control" th:field="*{cost}" required>
+                </div>
+
+
+                <div class="form-group">
+                    <input type="file"  class="btn btn-secondary" value="./img" th:field="*{imageName}" accept="image/*"></input>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery script tag using Thymeleaf -->
+<script th:src="|https://code.jquery.com/jquery-3.6.0.min.js|"></script>
+
+<!-- Bootstrap script tag using Thymeleaf -->
+<script th:src="|https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js|"></script>
+</body>
+</html>
+
