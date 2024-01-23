@@ -353,8 +353,7 @@ public class CartController
 
     @GetMapping("/addQuantity/{id}")
     public String increase(@PathVariable("id") Long cartItemId, Model model,
-                           Principal principal, RedirectAttributes redirectAttributes)
-    {
+                           Principal principal, RedirectAttributes redirectAttributes) {
         if (principal == null)
         {
             return "redirect:/login";
@@ -366,7 +365,7 @@ public class CartController
             if (existingCart != null)
             {
 
-              Optional<CartItem> cartItem = cartItemRepository.findById(cartItemId);
+                Optional<CartItem> cartItem = cartItemRepository.findById(cartItemId);
 
                 if (cartItem.isPresent())
                 {
@@ -374,12 +373,15 @@ public class CartController
                     if(existingItem.getQuantity() <6){
                         existingItem.setQuantity(existingItem.getQuantity()+1);
                         cartItemRepository.save(existingItem);
+                    }else {
+                        redirectAttributes.addFlashAttribute("message", "Oops! Maximum quantity allowed is 6");
                     }
                 }
             }
             return "redirect:/user/cart"; // Redirect to the cart page after removal
         }
     }
+
 
 
 

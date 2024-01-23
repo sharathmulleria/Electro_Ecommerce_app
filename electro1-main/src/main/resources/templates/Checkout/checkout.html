@@ -342,7 +342,7 @@ a {
                                                     <label class="card-radio-label mb-0">
                                                         <input type="radio" name="address" id="info-address1"
                                                                class="card-radio-input" checked>
-                                                        <div class="card-radio text-truncate p-3">
+                                                        <div th:if="${defaultAddress != null}"  class="card-radio text-truncate p-3">
                                                             <span class="fs-14 mb-4 d-block">Address 1</span>
                                                             <span class="fs-14 mb-2 d-block" th:text="${user.userName}">Bradley McMillian</span>
                                                             <span class="text-muted fw-normal text-wrap mb-1 d-block"
