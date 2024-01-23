@@ -131,7 +131,7 @@ public class UserCheckOutController {
 
     @PostMapping("/proceedToCheckOut")
     public String PlaceOrder(@RequestParam("paymentMethod") String paymentMethod, Principal principal
-                                                    , Model model, RedirectAttributes redirectAttributes) {
+            , Model model, RedirectAttributes redirectAttributes) {
 
         String email = principal.getName();
         User user = userRepository.findByEmail(email);
@@ -157,30 +157,31 @@ public class UserCheckOutController {
             return "redirect:/user/home";
 
 
-        //Check stock, if the stock is available then only success
+            //Check stock, if the stock is available then only success
         }
-        if (paymentMethod.equals("WALLET")){
+        if (paymentMethod.equals("WALLET")) {
             return "redirect:/user/orderPlacedWithWallet";
         } else {
             List<CartItem> cartItemList = userCart.getCartItems();
             boolean allItemsInStock = true;
             List<String> outOfStockItems = new ArrayList<>();
 
-            for (CartItem cartItem : cartItemList){
+            for (CartItem cartItem : cartItemList) {
                 Product product = cartItem.getProduct();
                 int quantityToOrder = cartItem.getQuantity();
-                if (product.getStock() < quantityToOrder){
+                if (product.getStock() < quantityToOrder) {
                     allItemsInStock = false;
                     outOfStockItems.add(product.getProductName());
                 }
             }
-            if (allItemsInStock){
+            if (allItemsInStock) {
                 orderService.saveOrder(paymentMethod, principal);
                 cartItemService.decreaseStock(cartItemList);
                 cartItemRepository.deleteAll();
                 return "Checkout/orderSuccess";
-            }else {;
-                redirectAttributes.addFlashAttribute("outOfStockItems",outOfStockItems);
+            } else {
+                ;
+                redirectAttributes.addFlashAttribute("outOfStockItems", outOfStockItems);
                 // Redirect to cart with out-of-stock message
                 return "redirect:/user/cart";
             }
@@ -188,61 +189,56 @@ public class UserCheckOutController {
     }
 
 
-
     @GetMapping("/orderPlacedWithWallet")
-    public String placeOrderWithWallet(RedirectAttributes redirectAttributes){
+    public String placeOrderWithWallet(RedirectAttributes redirectAttributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         String insufficientMoney = "Wallet has Insufficient Money";
 
         User user = userRepository.findByEmail(email);
-        Wallet wallet = user.getWallet();
+        Optional<Wallet> wallet = Optional.ofNullable(user.getWallet());
         Cart userCart = cartRepository.findCartByUserId(user.getId());
-        long id = wallet.getId();
-        double bal = wallet.getBalance();
-        double totalPrice = userCart.getTotal();
+        if (wallet.isPresent()) {
+            Wallet userWallet = wallet.get();
+            long id = userWallet.getId();
+            double bal = userWallet.getBalance();
+            double totalPrice = userCart.getTotal();
 
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        Order userOrder = new Order();
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            Order userOrder = new Order();
 
-        if (bal >= totalPrice){
-            userOrder.setUser(user);
-            userOrder.setPayment(Payment.WALLET);
-            userOrder.setStatus(Status.PENDING);
-            userOrder.setOrdered_date(LocalDate.from(currentDateTime));
-            userOrder.setTotal((int) totalPrice);
-            orderRepository.save(userOrder);
-            wallet.setBalance(bal-totalPrice);
-            walletRepository.save(wallet);
+            if (bal >= totalPrice) {
+                userOrder.setUser(user);
+                userOrder.setPayment(Payment.WALLET);
+                userOrder.setStatus(Status.PENDING);
+                userOrder.setOrdered_date(LocalDate.from(currentDateTime));
+                userOrder.setTotal((int) totalPrice);
+                orderRepository.save(userOrder);
+                userWallet.setBalance(bal - totalPrice);
+                walletRepository.save(userWallet);
 
-            WalletHistory walletHistory = new WalletHistory();
-            walletHistory.setWallet(wallet);
-            walletHistory.setAmount(totalPrice);
-            walletHistory.setTransaction(Transactions.DEBIT);
-            walletHistory.setTransactionDate(LocalDate.now());
-            walletHistoryRepository.save(walletHistory);
+                WalletHistory walletHistory = new WalletHistory();
+                walletHistory.setWallet(userWallet);
+                walletHistory.setAmount(totalPrice);
+                walletHistory.setTransaction(Transactions.DEBIT);
+                walletHistory.setTransactionDate(LocalDate.now());
+                walletHistoryRepository.save(walletHistory);
 
 
-            for (CartItem cartItem : userCart.getCartItems()) {
-                OrderItem orderItem = new OrderItem();
-                orderItem.setOrder(userOrder);
-                orderItem.setQuantity(cartItem.getQuantity());
-                orderItem.setPrice(cartItem.getPrice());
-                orderItem.setProduct(cartItem.getProduct());
+                for (CartItem cartItem : userCart.getCartItems()) {
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.setOrder(userOrder);
+                    orderItem.setQuantity(cartItem.getQuantity());
+                    orderItem.setPrice(cartItem.getPrice());
+                    orderItem.setProduct(cartItem.getProduct());
 
-                orderItemRepository.save(orderItem);
+                    orderItemRepository.save(orderItem);
+                }
+                return "Checkout/orderSuccess";
+
             }
-            return "Checkout/orderSuccess";
-
-        }else {
-            redirectAttributes.addFlashAttribute("insufficientMoney", insufficientMoney);
-            return "redirect:/user/cart";
         }
-
+        redirectAttributes.addFlashAttribute("insufficientMoney", insufficientMoney);
+        return "redirect:/user/cart";
     }
-
-
-
-
-
 }
