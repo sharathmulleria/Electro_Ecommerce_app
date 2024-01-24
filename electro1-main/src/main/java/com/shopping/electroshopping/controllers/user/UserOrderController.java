@@ -52,9 +52,8 @@ public class UserOrderController {
 
 
 //User Side Order History Controller for View All Order by User Made.
-    @GetMapping("/orderHistory/{user_id}")
-    public String orderHistory(@PathVariable("user_id") Long user_id,
-                               Model model) {
+    @GetMapping("/orderHistory")
+    public String orderHistory(Model model) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -83,7 +82,7 @@ public class UserOrderController {
     @GetMapping("cancelOrder/{id}")
     public String cancellOrder(@PathVariable("id") Long id){
         orderService.cancelOrder(id);
-        return "redirect:/user/orderHistory/"+id;
+        return "redirect:/user/orderHistory";
     }
 
 

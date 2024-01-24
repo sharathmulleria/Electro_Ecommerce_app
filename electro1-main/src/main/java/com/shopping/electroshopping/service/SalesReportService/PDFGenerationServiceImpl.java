@@ -36,6 +36,7 @@ public class PDFGenerationServiceImpl implements PDFGenerationService {
     private TemplateEngine templateEngine;
 
 
+    // Generate sales report in pdf formate in admin user.
     public void generate(List<Order> orders, HttpServletResponse response,
                          String startDate, String endDate) throws DocumentException, IOException {
         LocalDate startLocalDate = LocalDate.parse(startDate);
@@ -88,40 +89,88 @@ public class PDFGenerationServiceImpl implements PDFGenerationService {
         document.add(table);
         document.close();
 
+
     }
 
 
 
+    public void generatePdf(Long id, HttpServletResponse response) throws IOException{
 
+        Optional<Order> order = orderRepository.findById(id);
 
-        public byte[] generatePdf(Long id) throws IOException{
-        // Create a Thymeleaf context and add any dynamic data needed in your template
-        Optional<Order> optionalOrder = orderRepository.findById(id);
-        if (optionalOrder.isPresent()) {
-            Order order = optionalOrder.get();
+        if (order.isPresent()){
+            Order userOrder = order.get();
 
-            // Create a Thymeleaf context and add the Order object as a variable
-            Context context = new Context();
-            context.setVariable("order", order);
+            Document document = new Document(PageSize.A4);
+            PdfWriter.getInstance(document, response.getOutputStream());
+            document.open();
+            Font fontTitle = FontFactory.getFont(FontFactory.TIMES_ROMAN, 35, Font.BOLD);
+            fontTitle.setSize(20);
+            Paragraph paragraph1 = new Paragraph("Electro Invoice ");
+            paragraph1.setAlignment(Element.ALIGN_CENTER);
+            document.add(paragraph1);
 
-            // Process the Thymeleaf template to generate HTML content
-            String htmlContent = templateEngine.process("invoiceDownload", context);
+            PdfPTable table = new PdfPTable(3);
+            table.setWidthPercentage(100);
+            table.setWidths(new int[]{3, 3, 3});
+            table.setSpacingBefore(5);
+            PdfPCell cell = new PdfPCell();
+            cell.setBackgroundColor(CMYKColor.LIGHT_GRAY);
+            cell.setPadding(5);
+            Font font = FontFactory.getFont(FontFactory.TIMES_ROMAN);
+            font.setColor(CMYKColor.WHITE);
+            cell.setPhrase(new Phrase("Sl.No", font));
+            table.addCell(cell);
+            cell.setPhrase(new Phrase("Product Name", font));
+            table.addCell(cell);
+            cell.setPhrase(new Phrase("Amount", font));
+            table.addCell(cell);
 
-            // Generate the PDF from the HTML content
-            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-                ITextRenderer renderer = new ITextRenderer();
-                renderer.setDocumentFromString(htmlContent);
-                renderer.layout();
-                renderer.createPDF(outputStream);
-
-                return outputStream.toByteArray();
+            int no = 1;
+            for(OrderItem item : userOrder.getOrderItems()){
+                table.addCell(String.valueOf(no));
+                table.addCell(String.valueOf(item.getProduct().getProductName()));
+                table.addCell(String.valueOf(item.getProduct().getDiscountedPrice()));
+                no++;
             }
-
-        } else {
-            // Handle the case where the order is not found (e.g., throw an exception or return an error response)
-            throw new EntityNotFoundException("Order not found with ID: " + id);
+            document.add(table);
+            document.close();
         }
+
     }
+
+
+
+
+
+//        public byte[] generatePdf(Long id) throws IOException{
+//        // Create a Thymeleaf context and add any dynamic data needed in your template
+//        Optional<Order> optionalOrder = orderRepository.findById(id);
+//        if (optionalOrder.isPresent()) {
+//            Order order = optionalOrder.get();
+//
+//            // Create a Thymeleaf context and add the Order object as a variable
+//            Context context = new Context();
+//            context.setVariable("order", order);
+//
+//            // Process the Thymeleaf template to generate HTML content
+//            String htmlContent = templateEngine.process("invoiceDownload", context);
+//
+//            // Generate the PDF from the HTML content
+//            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+//                ITextRenderer renderer = new ITextRenderer();
+//                renderer.setDocumentFromString(htmlContent);
+//                renderer.layout();
+//                renderer.createPDF(outputStream);
+//
+//                return outputStream.toByteArray();
+//            }
+//
+//        } else {
+//            // Handle the case where the order is not found (e.g., throw an exception or return an error response)
+//            throw new EntityNotFoundException("Order not found with ID: " + id);
+//        }
+//    }
 
 
     @Override

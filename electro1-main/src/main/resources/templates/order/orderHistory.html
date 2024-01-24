@@ -94,10 +94,13 @@ background: linear-gradient(to top left, rgba(205, 156, 242, 1), rgba(246, 243, 
                         <h5 class="text-muted mb-0">Thanks for your Order, <span style="color: #a8729a;"  th:sec:authentication="principal.username">Anna</span>!</h5>
                     </div>
                     <div class="card-body p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div  class="d-flex justify-content-between align-items-center mb-3">
                             <p class="small text-muted mb-0" th:text="${order.ordered_date}">Receipt Voucher : 1KAU9-84UIL</p>
-                            <a th:href="@{/user/cancelOrder/{id}(id=${order.id})}"  class="cancel-button">  <button onclick="confirmCancel()">Cancel order</button>
-                            </a>
+                            <th:block th:if="${order.status == T(com.shopping.electroshopping.Enums.Status).PENDING}">
+                                <a th:href="@{/user/cancelOrder/{id}(id=${order.id})}" class="cancel-button">
+                                    <button onclick="confirmCancel()">Cancel order</button>
+                                </a>
+                            </th:block>
                             <a th:href="@{/user/downloadInvoice/{id}(id=${order.id})}"  class="cancel-button">  <button>Download invoice</button>
                             </a>
 

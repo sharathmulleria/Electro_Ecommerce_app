@@ -20,7 +20,7 @@ public interface PDFGenerationService {
 
 /* Download user order Invoice in the User side. It will
    Download all the user order in pdf   */
-    public byte[] generatePdf(Long id) throws IOException;
+    public void generatePdf(Long id, HttpServletResponse response) throws IOException;
 
 
 /* Generate Excel Document for Sales report. It will Accept Start date and
