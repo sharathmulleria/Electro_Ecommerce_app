@@ -125,7 +125,7 @@
 
                                                 <input id="form1" min="0" name="quantity" type="number"
                                                        class="form-control text-center form-control-sm"
-                                                       th:value="${cartItem.quantity}"/>
+                                                       th:value="${cartItem.quantity}" readonly/>
 
                                                 <a th:href="@{/user/addQuantity/{id}(id = ${cartItem.cartItemId})}"
                                                    class="btn btn-danger">+</a>

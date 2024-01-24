@@ -147,16 +147,19 @@ public class UserCheckOutController {
         Cart cart = existingCustomer.getCart();
         List<CartItem> cartItems = userCart.getCartItems();
 
-
         model.addAttribute("CartItems", cartItems);
         model.addAttribute("totalPrice", userCart.getTotal());
         model.addAttribute("orderReference", orderReference);
 
+        if (defaultAddress.isEmpty()){
+            redirectAttributes.addFlashAttribute("address", "Please set address details before checkout");
+            return "redirect:/user/checkout";
+
+        }
+
         // Payment method is Paypal it will redirect to the Paypal controller page
         if (paymentMethod.equals("Paypal")) {
             return "redirect:/user/home";
-
-
             //Check stock, if the stock is available then only success
         }
         if (paymentMethod.equals("WALLET")) {

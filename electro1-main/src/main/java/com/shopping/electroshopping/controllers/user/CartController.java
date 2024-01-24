@@ -25,8 +25,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/user")
-public class CartController
-{
+public class CartController {
 
     @Autowired
     ProductServiceImpl productServiceImp;
@@ -55,121 +54,98 @@ public class CartController
     UserAddressRepository userAddressRepository;
 
 
+    @GetMapping("/cart")
+    public String showCart(Model model, Principal principal, RedirectAttributes redirectAttributes) {
 
+        if (principal != null) {
+            String email = principal.getName();
+            User user = userRepository.findByEmail(email);
+            List<CartItem> cartItems = cartItemRepository.findByCartUser(user);
+            double totalPrice = 0;
 
-
-
-@GetMapping("/cart")
-    public String showCart(Model model,Principal principal)
-{
-
-    if(principal != null){
-        String email = principal.getName();
-        User user = userRepository.findByEmail(email);
-        List<CartItem> cartItems = cartItemRepository.findByCartUser(user);
-        double totalPrice=0;
-
-        for (CartItem cartItem : cartItems){
+            for (CartItem cartItem : cartItems) {
                 totalPrice += cartItem.getProduct().getDiscountedPrice();
+            }
+
+            double totalAmount;
+            Optional<Cart> userCarts = Optional.ofNullable(user.getCart());
+
+            if (userCarts.isPresent()) {
+                Cart cart = userCarts.get();
+                cart.setTotal(totalPrice);
+                int totalProducts = cartItems.stream().mapToInt(CartItem::getQuantity).sum();
+                model.addAttribute("totalProducts", totalProducts);
+                model.addAttribute("totalPrice", totalPrice);
+                model.addAttribute("cartItems", cartItems);
+                cartRepository.save(cart);
+                return "/cart/cart";
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Opps.! No item in your Cart..");
+                return "/cart/cart";
+            }
         }
-
-        double totalAmount;
-        Cart userCart = user.getCart();
-        userCart.setTotal(totalPrice);
-        int totalProducts = cartItems.stream().mapToInt(CartItem::getQuantity).sum();
-        model.addAttribute("totalProducts", totalProducts);
-        model.addAttribute("totalPrice", totalPrice);
-        model.addAttribute("cartItems",cartItems);
-        cartRepository.save(userCart);
-        return "/cart/cart";
+        return "redirect:/login";
     }
-
-    return "redirect:/login";
-}
-
-
 
 
     @PostMapping("/addToCart")
     public String addToCart(@RequestParam("productId") Long productId,
                             Model model, Principal principal,
-                            RedirectAttributes redirectAttributes)
-    {
+                            RedirectAttributes redirectAttributes) {
         String email = principal.getName();
 
-        if (principal == null)
-        {
+        if (principal == null) {
             return "redirect:/login";
-        } else
-        {
+        } else {
 
             User user = userRepository.findByEmail(email);
             Cart existingCart = user.getCart(); // Use this simplified way to get the user's cart
+            Optional<Product> product = productRepository.findById(productId);
 
+            // Create a new cart if it doesn't exist
             if (existingCart == null) {
-
-                // Create a new cart if it doesn't exist
                 existingCart = new Cart();
                 existingCart.setUser(user);
                 cartRepository.save(existingCart);
                 user.setCart(existingCart);
                 userRepository.save(user);
             }
-
-            Optional<Product> product = productRepository.findById(productId);
-
-            if (product.isPresent())
-            {
+            if (product.isPresent()) {
                 Product existingProduct = product.get();
-
-
                 // Check if the product is already in the cart
                 CartItem existingCartItem = cartItemRepository
-                                            .findByCartAndProduct(existingCart,existingProduct);
+                        .findByCartAndProduct(existingCart, existingProduct);
 
-                if (existingCartItem != null)
-                {
-
+                if (existingCartItem != null) {
                     // Product is already in the cart, increase the quantity
                     existingCartItem.setQuantity(existingCartItem.getQuantity() + 1);
                     cartItemRepository.save(existingCartItem);
-                } else
-                {
+                } else {
                     // Product is not in the cart, create a new cart item
                     cartItemService.saveToCart(existingCart, existingProduct);
                 }
 
                 redirectAttributes.addFlashAttribute("success",
-                                                        "Cart item added");
-
+                        "Cart item added");
                 return "redirect:/user/productView?productId=" + productId;
-
-            }
-            else
-            {
+            } else {
                 redirectAttributes.addFlashAttribute("error_message",
-                                                    "Product not found");
-
+                        "Product not found");
                 return "redirect:/user/productView?productId=" + productId;
             }
         }
     }
 
 
-
-
     @GetMapping("/addToCartForWishlist")
     public String addToCartForWishlistItem(@RequestParam("productId") Long productId,
-                            Model model, Principal principal,
-                            RedirectAttributes redirectAttributes)
-    {
+                                           Model model, Principal principal,
+                                           RedirectAttributes redirectAttributes) {
         String email = principal.getName();
 
-        if (principal == null)
-        {
+        if (principal == null) {
             return "redirect:/login";
-        } else
-        {
+        } else {
 
             User user = userRepository.findByEmail(email);
             Cart existingCart = user.getCart(); // Use this simplified way to get the user's cart
@@ -186,23 +162,20 @@ public class CartController
 
             Optional<Product> product = productRepository.findById(productId);
 
-            if (product.isPresent())
-            {
+            if (product.isPresent()) {
                 Product existingProduct = product.get();
 
 
                 // Check if the product is already in the cart
                 CartItem existingCartItem = cartItemRepository
-                        .findByCartAndProduct(existingCart,existingProduct);
+                        .findByCartAndProduct(existingCart, existingProduct);
 
-                if (existingCartItem != null)
-                {
+                if (existingCartItem != null) {
 
                     // Product is already in the cart, increase the quantity
                     existingCartItem.setQuantity(existingCartItem.getQuantity() + 1);
                     cartItemRepository.save(existingCartItem);
-                } else
-                {
+                } else {
                     // Product is not in the cart, create a new cart item
                     cartItemService.saveToCart(existingCart, existingProduct);
                 }
@@ -212,9 +185,7 @@ public class CartController
 
                 return "redirect:/user/wishlist";
 
-            }
-            else
-            {
+            } else {
                 redirectAttributes.addFlashAttribute("error_message",
                         "Product not found");
 
@@ -224,27 +195,20 @@ public class CartController
     }
 
 
-
-
-
     @GetMapping("/removeFromCart/{id}")
     public String removeFromCart(@PathVariable("id") Long cartItemId, Model model,
-                                 Principal principal, RedirectAttributes redirectAttributes)
-    {
-        if (principal == null)
-        {
+                                 Principal principal, RedirectAttributes redirectAttributes) {
+        if (principal == null) {
             return "redirect:/login";
         } else {
             String email = principal.getName();
             User user = userRepository.findByEmail(email);
             Cart existingCart = user.getCart();
 
-            if (existingCart != null)
-            {
-              Optional<CartItem> cartItem = cartItemRepository.findById(cartItemId);
+            if (existingCart != null) {
+                Optional<CartItem> cartItem = cartItemRepository.findById(cartItemId);
 
-                if (cartItem.isPresent())
-                {
+                if (cartItem.isPresent()) {
                     CartItem existingItem = cartItem.get();
                     cartItemRepository.delete(existingItem);
                 }
@@ -253,7 +217,6 @@ public class CartController
             return "redirect:/user/cart"; // Redirect to the cart page after removal
         }
     }
-
 
 
     @GetMapping("/addToCart")
@@ -290,12 +253,11 @@ public class CartController
             cartItem.setCart(userCart);
 
             // Save CartItem to CartItems table
-//            cartItemsRepository.save(cartItem);
 
             List<CartItem> cartItems = cartItemRepository.findByCartUser(user);
             double totalPrice = cartItemRepository.sumCartItemsPriceByUser(user);
             userCart.setTotal(totalPrice);
-            double newtotal= userCart.getTotal();
+            double newtotal = userCart.getTotal();
             // Pass the cart items to the Thymeleaf template
             model.addAttribute("totalPrice", newtotal);
             model.addAttribute("cartItems", cartItems);
@@ -310,35 +272,26 @@ public class CartController
     }
 
 
-
-
-
     @GetMapping("/decreaseQuantity/{id}")
     public String decreaseQty(@PathVariable("id") Long cartItemId, Model model,
-                              Principal principal, RedirectAttributes redirectAttributes)
-
-    {
-        if (principal == null)
-
-        { return "redirect:/login"; }else
-
-        {
+                              Principal principal, RedirectAttributes redirectAttributes) {
+        if (principal == null) {
+            return "redirect:/login";
+        } else {
             String email = principal.getName();
             User user = userRepository.findByEmail(email);
             Cart existingCart = user.getCart();
 
-            if (existingCart != null)
-            {
+            if (existingCart != null) {
 
-              Optional<CartItem> cartItem = cartItemRepository.findById(cartItemId);
+                Optional<CartItem> cartItem = cartItemRepository.findById(cartItemId);
 
-                if (cartItem.isPresent())
-                {
+                if (cartItem.isPresent()) {
 
                     CartItem existingItem = cartItem.get();
 
-                    if(existingItem.getQuantity() >1){
-                        existingItem.setQuantity(existingItem.getQuantity()-1);
+                    if (existingItem.getQuantity() > 1) {
+                        existingItem.setQuantity(existingItem.getQuantity() - 1);
 
                         cartItemRepository.save(existingItem);
                     }
@@ -349,31 +302,25 @@ public class CartController
     }
 
 
-
-
     @GetMapping("/addQuantity/{id}")
     public String increase(@PathVariable("id") Long cartItemId, Model model,
                            Principal principal, RedirectAttributes redirectAttributes) {
-        if (principal == null)
-        {
+        if (principal == null) {
             return "redirect:/login";
-        }else
-        {
+        } else {
             String email = principal.getName();
             User user = userRepository.findByEmail(email);
             Cart existingCart = user.getCart();
-            if (existingCart != null)
-            {
+            if (existingCart != null) {
 
                 Optional<CartItem> cartItem = cartItemRepository.findById(cartItemId);
 
-                if (cartItem.isPresent())
-                {
+                if (cartItem.isPresent()) {
                     CartItem existingItem = cartItem.get();
-                    if(existingItem.getQuantity() <6){
-                        existingItem.setQuantity(existingItem.getQuantity()+1);
+                    if (existingItem.getQuantity() < 6) {
+                        existingItem.setQuantity(existingItem.getQuantity() + 1);
                         cartItemRepository.save(existingItem);
-                    }else {
+                    } else {
                         redirectAttributes.addFlashAttribute("message", "Oops! Maximum quantity allowed is 6");
                     }
                 }
@@ -381,12 +328,6 @@ public class CartController
             return "redirect:/user/cart"; // Redirect to the cart page after removal
         }
     }
-
-
-
-
-
-
 
 
 }

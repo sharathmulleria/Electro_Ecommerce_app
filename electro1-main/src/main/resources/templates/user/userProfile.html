@@ -191,6 +191,13 @@
 <!-- SECTION -->
 <!--<li ></li>-->
 <div class="container">
+
+    <div th:if="${error}">
+        <div class="alert alert-success"><p th:text="${error}" >
+            Please add address details before set default address</p>
+        </div>
+    </div>
+
     <div class="main">
 
         <div class="row">
@@ -283,12 +290,8 @@
                                         </div>
                                     </li>
                                 </ul>
-
                                 <button type="submit" class="btn btn-primary">Set Default Address</button>
-
                             </form>
-
-
                         </div>
 
                     </div>

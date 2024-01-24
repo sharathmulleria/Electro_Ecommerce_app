@@ -13,9 +13,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.*;
 
@@ -81,12 +83,15 @@ public class UserController {
 
     //User Can set Default Address in User Profile Page
     @PostMapping("/set-default-address")
-    public String makeUserAddressDefault(@RequestParam("addressId") Long addressId, RedirectAttributes redirectAttributes
-            , Principal principal) {
+    public String makeUserAddressDefault(@RequestParam("addressId") Long addressId,
+                                         RedirectAttributes redirectAttributes,
+                                         Principal principal) {
+
         String name = principal.getName();
         Optional<UserAddress> existingAddress = userAddressRepository.findById(addressId);
         Optional<User> existingUser = Optional.ofNullable(userRepository.findByEmail(name));
-        Optional<List<UserAddress>> addressList = userAddressRepository.findAllByUserId(existingUser.get().getId());
+        Optional<List<UserAddress>> addressList = userAddressRepository
+                                                  .findAllByUserId(existingUser.get().getId());
 
         for (UserAddress address : addressList.get()) {
             address.setDefault(false);
@@ -98,7 +103,8 @@ public class UserController {
             userAddressRepository.save(address);
         }
 
-        redirectAttributes.addFlashAttribute("success", "Your default address is changed");
+        redirectAttributes.addFlashAttribute("success",
+                "Your default address is changed");
         return "redirect:/user/profile";
     }
 

@@ -265,8 +265,8 @@ a {
                                 </div>
                             </div>
 
-                            <div th:if="${error}" class="alert alert-danger">
-                                <p th:text="${message}">Insufficient wallet amount</p>
+                            <div th:if="${address}" class="alert alert-danger">
+                                <p th:text="${address}">Insufficient wallet amount</p>
                             </div>
                             <div th:if="${insufficientMoney}" class="alert alert-danger">
                                 <p th:text="${insufficientMoney}">Insufficient wallet amount</p>
